@@ -64,3 +64,13 @@ Response 422
 {
   "error": "name is required"
 }
+
+### PUT/PRODUCT
+
+ACTUALIZAR PRODUCTO 
+
+### Body (JSON)
+{
+  "name": "Keyboard",
+  "price": 50
+}
