@@ -82,4 +82,24 @@ export const updateProduct = (req, res) => {
   // console.log(product);
 
   res.json(product);
-};
+}
+
+
+  export const deleteProduct = (req, res) => {
+    const id = Number(req.params.id);
+
+    if (Number.isNaN (id)) {
+      return res.status(400).json({ error: " Invalid ID"});
+
+    }
+    const productIndex = products.findIndex((p) => p.id == id);
+    res.send(productIndex);
+
+    //if (productIndex < 0) {
+    if (productIndex == -1) {
+      return res.status(404).json({ error: "Product not found"});
+    }
+    product.splice(productIndex, 1)
+
+    res.status(204).send()
+  };

@@ -72,3 +72,21 @@ export const updateCategory = (req, res) => {
 
   res.json(category);
 };
+
+ export const deleteCategory = (req, res) => {
+  const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return res.status(400).json({ error: "Invalid ID" });
+  }
+
+  const categoryIndex = categories.findIndex((c) => c.id == id);
+
+  if (categoryIndex === -1) {
+    return res.status(404).json({ error: "Category not found" });
+  }
+
+  categories.splice(categoryIndex, 1);
+
+  res.status(204).send();
+};
