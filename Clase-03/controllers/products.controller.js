@@ -7,6 +7,8 @@ const products = [
   { id: 2, name: "Mouse", price: 20, stock: 50 },
 ];
 
+
+
 /*export const getProducts = (req, res) => {
   res.json(products);
 };*/
@@ -52,7 +54,7 @@ export const createProduct = async (req, res) => {
   const product = new Product(data);
   await product.save();
  
-  res.status(201).json(newProduct);
+  res.status(201).json(product);
 
    //products.push(newProduct);
 };
@@ -112,4 +114,19 @@ export const updateProduct = (req, res) => {
     product.splice(productIndex, 1)
 
     res.status(204).send()
+  
   };
+
+  export const searchProduct = async (req, res) => {
+   const { name } = req.query;
+  
+if (!name) {
+  return res.status(422).json({ error: "Name is required" });
+}
+const products = await Product.find({
+  name: { $regex: name, $options: "i" },
+});
+res.json(products);
+
+  };
+

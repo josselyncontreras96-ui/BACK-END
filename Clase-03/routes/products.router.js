@@ -8,7 +8,11 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  searchProduct,
 } from "../controllers/products.controller.js";
+
+// /product/search?name=ap
+router.get("/search", searchProduct);
 
 router.get("/", getProducts);
 router.get("/:id", getProductById);
@@ -17,6 +21,8 @@ router.post("/", createProduct);
 router.put("/:id", updateProduct);
 
 router.delete("/:id", deleteProduct);
+
+
 
 
 export default router;
