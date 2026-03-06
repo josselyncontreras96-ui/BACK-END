@@ -1,4 +1,7 @@
-const categories = [
+import Category from "../models/Category.js";
+
+
+const categories = [  
   {
     id: 1,
     name: "Electro",
@@ -90,3 +93,20 @@ export const updateCategory = (req, res) => {
 
   res.status(204).send();
 };
+
+
+export const searchCategory = (req, res) => {
+  const { name } = req.query;
+
+  if (!name) {
+    return res.status(422).json({ error: "Name is required" });
+  }
+
+  const results = categories.filter((c) =>
+    c.name.toLowerCase().includes(name.toLowerCase())
+  );
+
+  res.json(results);
+};
+
+

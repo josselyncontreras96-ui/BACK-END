@@ -2,6 +2,7 @@ import { validateStock, validatePrice } from "../utils/validators.js";
 
 import Product from "../models/Product.js";
 
+
 const products = [
   { id: 1, name: "Laptop", price: 1200, stock: 10 },
   { id: 2, name: "Mouse", price: 20, stock: 50 },
@@ -129,4 +130,6 @@ const products = await Product.find({
 res.json(products);
 
   };
+
+
 
