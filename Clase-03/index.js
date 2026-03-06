@@ -1,11 +1,23 @@
+import dns from "node:dns";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
 import express from "express";
+import mongoose from "mongoose"
 import productsRouter from "./routes/products.router.js";
 import categoriesRouter from "./routes/categories.router.js";
 import pingRouter from "./routes/ping.router.js";
 
+
 const app = express();
 
 app.use(express.json()); // 
+console.log(process.env.MONGODB_URI);
+
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => console.log(error));
+
 
 //app.post("/products", (req, res) => {
  // console.log(req.body);

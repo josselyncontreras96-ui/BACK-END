@@ -1,13 +1,21 @@
 import { validateStock, validatePrice } from "../utils/validators.js";
 
+import Product from "../models/Product.js";
+
 const products = [
   { id: 1, name: "Laptop", price: 1200, stock: 10 },
   { id: 2, name: "Mouse", price: 20, stock: 50 },
 ];
 
-export const getProducts = (req, res) => {
+/*export const getProducts = (req, res) => {
+  res.json(products);
+};*/
+
+export const getProducts = async (req, res) => {
+  const products = await Product.find();
   res.json(products);
 };
+
 
 export const getProductById = (req, res) => {
   const id = Number(req.params.id);
@@ -25,7 +33,7 @@ export const getProductById = (req, res) => {
   res.json(product);
 };
 
-export const createProduct = (req, res) => {
+export const createProduct = async (req, res) => {
   if (!validateStock(req.body.stock)) {
     // if (validateStock(req.body.stock) == false) {
     return res.status(422).json({ error: "Invalid stock" });
@@ -35,16 +43,18 @@ export const createProduct = (req, res) => {
     return res.status(422).json({ error: "Invalid price" });
   }
 
-  const newProduct = {
-    id: Date.now(),
+  const data = {
     name: req.body.name,
     price: Number(req.body.price),
     stock: Number(req.body.stock),
   };
 
-  products.push(newProduct);
-
+  const product = new Product(data);
+  await product.save();
+ 
   res.status(201).json(newProduct);
+
+   //products.push(newProduct);
 };
 
 export const updateProduct = (req, res) => {
