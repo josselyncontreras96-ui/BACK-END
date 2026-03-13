@@ -20,20 +20,19 @@ export const getProducts = async (req, res) => {
 };
 
 
-export const getProductById = (req, res) => {
-  const id = Number(req.params.id);
+export const getProductById = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
 
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid id" });
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.json(product);
+
+  } catch (error) {
+    res.status(400).json({ error: "Invalid id" });
   }
-
-  const product = products.find((p) => p.id == id);
-
-  if (!product) {
-    return res.status(404).json({ error: "Product not found" });
-  }
-
-  res.json(product);
 };
 
 export const createProduct = async (req, res) => {
@@ -60,7 +59,7 @@ export const createProduct = async (req, res) => {
    //products.push(newProduct);
 };
 
-export const updateProduct = (req, res) => {
+/*export const updateProduct = (req, res) => {
   const id = Number(req.params.id);
 
   if (isNaN(id)) {
@@ -95,7 +94,29 @@ export const updateProduct = (req, res) => {
   // console.log(product);
 
   res.json(product);
-}
+}*/
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const productUpdate = await Product.findByIdAndUpdate(
+      id,
+      req.body,
+      {
+        returnDocument: "after",
+      }
+    );
+
+    if (!productUpdate) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.json(productUpdate);
+
+  } catch (error) {
+    res.status(400).json({ error: "Invalid product id" });
+  }
+};
 
 
   export const deleteProduct = (req, res) => {

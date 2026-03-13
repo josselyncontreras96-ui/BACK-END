@@ -18,7 +18,7 @@ export const getCategories = (req, res) => {
   res.json(categories);
 };
 
-export const getCategoryById = (req, res) => {
+/*export const getCategoryById = (req, res) => {
   const id = parseInt(req.params.id);
 
   if (isNaN(id)) {
@@ -32,9 +32,9 @@ export const getCategoryById = (req, res) => {
   }
 
   res.json(category);
-};
+};*/
 
-export const createCategory = (req, res) => {
+/*export const createCategory = async (req, res) => {
   console.log(req.body, req.body.name);
 
   if (!req.body.name) {
@@ -50,7 +50,21 @@ export const createCategory = (req, res) => {
   categories.push(newCategory);
 
   res.status(201).json(newCategory);
-};
+};*/
+
+export const createCategory = async (req, res) => {
+  if (!req.body.name) {
+    return res.status(422).json({ error: "No tiene nombre"});
+  }
+  const data = {
+name: req.body.name,
+description: req.body.description,
+  };
+
+  const category = new Category(data);
+  await category.save();
+  res.status(201).json(category);
+  };
 
 export const updateCategory = (req, res) => {
   const id = Number(req.params.id);
@@ -108,5 +122,23 @@ export const searchCategory = (req, res) => {
 
   res.json(results);
 };
+
+export const getCategoryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    return res.json(category);
+
+  } catch (error) {
+    return res.status(400).json({ message: "Invalid category ID" });
+  }
+};
+
 
 
