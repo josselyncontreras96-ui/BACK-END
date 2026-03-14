@@ -119,7 +119,7 @@ export const updateProduct = async (req, res) => {
 };
 
 
-  export const deleteProduct = (req, res) => {
+  /*export const deleteProduct = (req, res) => {
     const id = Number(req.params.id);
 
     if (Number.isNaN (id)) {
@@ -137,6 +137,14 @@ export const updateProduct = async (req, res) => {
 
     res.status(204).send()
   
+  };*/
+
+  export const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+
+    const productDelete = await Product.findByIdAndDelete(id);
+    
+    res.status(204).send();
   };
 
   export const searchProduct = async (req, res) => {
