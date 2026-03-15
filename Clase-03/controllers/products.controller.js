@@ -36,27 +36,33 @@ export const getProductById = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-  if (!validateStock(req.body.stock)) {
+try {
+
+   /* if (!validateStock(req.body.stock)) {
     // if (validateStock(req.body.stock) == false) {
     return res.status(422).json({ error: "Invalid stock" });
   }
 
   if (!validatePrice(req.body.price)) {
     return res.status(422).json({ error: "Invalid price" });
-  }
-
-  const data = {
-    name: req.body.name,
-    price: Number(req.body.price),
-    stock: Number(req.body.stock),
-  };
-
-  const product = new Product(data);
+  }*/
+  //const data = {
+  //  name: req.body.name,
+  //  price: Number(req.body.price),
+  //  stock: Number(req.body.stock),
+ // };
+   const product = new Product(req.body);
   await product.save();
- 
-  res.status(201).json(product);
+ res.status(201).json(product);
 
-   //products.push(newProduct);
+} catch (error) {
+  console.log(error.name);
+if (error.name == "ValidationError"){
+  return res.status(422).json({ error: error.message });
+}
+
+  res.status(500).json({ error: "error interno"})
+}
 };
 
 /*export const updateProduct = (req, res) => {

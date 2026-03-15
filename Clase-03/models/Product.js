@@ -1,10 +1,30 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    stock: Number,
+    name: { 
+        type: String,
+        required: true,
+        minLength: 3,
+        maxLength: 100,
+        trim: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+        min: 0,
+    },
+    stock: {
+        type: Number,
+        required: true,
+        min: 0,
+     validate: {
+        validator: Number.isInteger,
+        message: "Stock must be an integer"
+     }
+    },
 });
 
 export default mongoose.model("Product", productSchema);
+
+
 
