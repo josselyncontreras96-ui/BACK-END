@@ -20,17 +20,27 @@ export const getCategories = (req, res) => {
 
 
 export const createCategory = async (req, res) => {
-  if (!req.body.name) {
-    return res.status(422).json({ error: "No tiene nombre"});
-  }
-  const data = {
-name: req.body.name,
-description: req.body.description,
-  };
+ try {
+  //if (!req.body.name) {
+    //return res.status(422).json({ error: "No tiene nombre"});
+ // }
+  //const data = {
+//name: req.body.name,
+//description: req.body.description,
+ // };
 
-  const category = new Category(data);
+  const category = new Category(req.body);
   await category.save();
   res.status(201).json(category);
+
+ } catch (error) {
+  console.log(error.name);
+if (error.name == "ValidationError"){
+  return res.status(422).json({ error: error.message });
+}
+
+  res.status(500).json({ error: "error al crear la categoria"});
+}
   };
 
 export const updateCategory = async (req, res) => {
