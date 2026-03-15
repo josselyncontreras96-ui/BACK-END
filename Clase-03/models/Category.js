@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        minLength: 2,
-        maxLength: 50,
+        required: [true, "Name required"],
+        minLength: [2, "Name must be at least 2 characters"],
+        maxLength: [50, "Name must be at most 50 characters"],
         trim: true,
     },
     description: {

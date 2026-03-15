@@ -56,9 +56,18 @@ try {
  res.status(201).json(product);
 
 } catch (error) {
-  console.log(error.name);
+ // console.log(error.errors);
+
+const errors = {};
+
+for (const property in error.errors){
+ // console.log(property, error.errors[property].message);
+ errors[property] = error.errors[property].message
+}
+//console.log(errors);
+
 if (error.name == "ValidationError"){
-  return res.status(422).json({ error: error.message });
+  return res.status(422).json({ error: errors });
 }
 
   res.status(500).json({ error: "error interno"})
@@ -105,11 +114,13 @@ export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const productUpdate = await Product.findByIdAndUpdate(
-      id,
-      req.body,
-      {
+  // if (!validateStock (req.body.stock)){
+
+   //}
+
+    const productUpdate = await Product.findByIdAndUpdate(id, req.body, {
         returnDocument: "after",
+        runValidators: true,
       }
     );
 
@@ -120,7 +131,14 @@ export const updateProduct = async (req, res) => {
     res.json(productUpdate);
 
   } catch (error) {
-    res.status(400).json({ error: "Invalid product id" });
+    if (error.name == "validationError") {
+        return res.status(422).json({ error: error.errors });
+    }
+
+    if (error.name == "CastError") {
+   return res.status(400).json({ error: "Invalid ID"});
+    }
+    res.status(500).json({ error: "Error Interno"});
   }
 };
 

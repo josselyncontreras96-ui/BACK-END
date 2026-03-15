@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const productSchema = new mongoose.Schema({
     name: { 
         type: String,
-        required: true,
+        required: [true, "El nombre es requerido"],
         minLength: 3,
         maxLength: 100,
         trim: true,
@@ -22,6 +22,8 @@ const productSchema = new mongoose.Schema({
         message: "Stock must be an integer"
      }
     },
+},{
+    timestamps: true,
 });
 
 export default mongoose.model("Product", productSchema);
