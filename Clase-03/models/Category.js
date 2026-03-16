@@ -1,20 +1,27 @@
 import mongoose from "mongoose";
 
-const categorySchema = new mongoose.Schema({
+const categorySchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: [true, "Name required"],
-        minLength: [2, "Name must be at least 2 characters"],
-        maxLength: [50, "Name must be at most 50 characters"],
-        trim: true,
+      type: String,
+      required: [true, "Name required"],
+      minLength: [2, "Name must be at least 2 characters"],
+      maxLength: [50, "Name must be at most 50 characters"],
+      trim: true,
     },
     description: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
-},{
-   timestamps: true,   // con esta opcion muestra la fecha de creacion y fecha de modificacion
-
-});
+    type: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CategoryType",
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 export default mongoose.model("Category", categorySchema);

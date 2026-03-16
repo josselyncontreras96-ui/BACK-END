@@ -8,10 +8,7 @@ import {
   createCategory,
   updateCategory,
   deleteCategory,
-  searchCategory,
 } from "../controllers/categories.controller.js";
-
-router.get("/search", searchCategory);
 router.get("/", getCategories);
 router.get("/:id", getCategoryById);
 router.post("/", createCategory);
