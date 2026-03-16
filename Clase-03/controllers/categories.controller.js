@@ -97,3 +97,18 @@ export const deleteCategory = async (req, res) => {
   }
 };
 
+export const getCategoryProducts = async (req, res) => {
+  try {
+    const products = await Product.find({
+      category: req.params.id,
+    });
+
+    res.json(products);
+  } catch (error) {
+    if (error.name == "CastError") {
+      return res.status(400).json({ error: "Invalid category id" });
+    }
+
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
