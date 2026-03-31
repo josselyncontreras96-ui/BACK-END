@@ -24,7 +24,7 @@ if (password.length < 6) {
     return res.status(400).json({ error: "contraseña debe tener al menos 6 caracteres" });
 }
 
-const existingUser = User.findOne({ email});
+const existingUser = await User.findOne({email});
 if (existingUser) {
     return res.status(400).json({ error: " Usuariro duplicado"});
 }
