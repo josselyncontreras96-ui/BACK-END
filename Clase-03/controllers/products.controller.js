@@ -75,7 +75,7 @@ export const updateProduct = async (req, res) => {
       runValidators: true,
     });
 
-    if (!productUpdate) {                                                                                                                              
+    if (!productUpdate) {
       return res.status(404).json({ error: "Product not found" });
     }
 
@@ -140,6 +140,3 @@ export const getProductsByCategoryId = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
