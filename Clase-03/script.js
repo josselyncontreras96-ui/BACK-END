@@ -30,6 +30,7 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5
 try {
     //const isVerify = jwt.verify(token, process.env.JWT_SECRET);
     //console.log(isVerify);
+    
     const decoded = jwt.decode(token);
     console.log(decoded);
 
