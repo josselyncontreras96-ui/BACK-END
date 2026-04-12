@@ -1,5 +1,6 @@
 import User from "../models/user.js"
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
     try {
@@ -29,7 +30,7 @@ if (existingUser) {
     return res.status(400).json({ error: " Usuariro duplicado"});
 }
 
-return res.send("Probando");
+//return res.send("Probando");
 
 
     const hash = await bcrypt.hash(password, 10);
@@ -48,4 +49,37 @@ return res.send("Probando");
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "correo y contraseña son requeridos" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "usuario no encontrado" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ error: "contraseña incorrecta" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return res.status(200).json({ token });
+
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
