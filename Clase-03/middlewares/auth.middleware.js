@@ -10,7 +10,7 @@ export const authMiddleware = (req, res, next) => {
         return res.status(401).json({ error: "No token provided" });
     }
 
-    if (!authHeader.startsWith("Bearer")) {
+    if (!authHeader.startsWith("Bearer ")) {
         return res.status(401).json({ error: "Invalid token format" });
     }
 
@@ -27,13 +27,13 @@ export const authMiddleware = (req, res, next) => {
 //res.send("OK");
 
 const [, token] = authHeader.split(" ");
-//console.log(token);
+console.log(token);
 
 const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//console.log(decoded);
+console.log(decoded);
 
 req.user = decoded; // Agregar la información del usuario al objeto de solicitud para que esté disponible en los controladores
-   
+   console.log("REQ.USER:", req.user);
 next();
    }
 catch (error) {

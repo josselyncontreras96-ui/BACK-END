@@ -1,4 +1,5 @@
-import User from "../models/user.js";
+import User from "../models/User.js";
+
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -10,49 +11,103 @@ const createToken = (user) => {
       expiresIn: process.env.JWT_EXPIRES_IN,
     },
   );
+
   return token;
 };
 
-export const profile = (req, res) => {
-  res.json({ 
-    message: "Perfil del usuario",
-    user: req.user,
-  });
+export const profile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    res.json({
+      message: "Perfil del usuario",
+      user: user,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password required" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email" });
+    }
+
+    if (password.length < 5) {
+      return res
+        .status(400)
+        .json({ error: "Contraseña muy corta, mínimo 6 caracteres" });
+    }
+
+    const user = await User.findOne({ email });
+
+    // console.log(user);
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    // console.log(password, user.password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid Credentials" });
+    }
+
+    const token = createToken(user);
+
+    res.json({ token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 export const register = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email.includes("@"));
+
+    //   console.log(!email.includes("@"));
 
     if (!email || !password) {
       return res
         .status(400)
-        .json({ error: "correo y contraseña son requeridos" });
+        .json({ error: "Correo y contraseña son requeridos." });
     }
 
-    /* if (!email.includes("@")) {
-        return res.status(400).json({ error: "correo no es valido" });
- }*/
+    //   if (!email.includes("@")) {
+    //     return res.status(400).json({ error: "Invalid email" });
+    //   }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // console.log(emailRegex.test(email));
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    //   console.log(!emailRegex.test(email));
 
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: "correo no es valido" });
+      return res.status(400).json({ error: "Invalid email" });
     }
-    if (password.length < 6) {
+
+    if (password.length < 5) {
       return res
         .status(400)
-        .json({ error: "contraseña debe tener al menos 6 caracteres" });
+        .json({ error: "Contraseña muy corta, mínimo 6 caracteres" });
     }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: " Usuariro duplicado" });
-    }
 
-    //return res.send("Probando");
+    if (existingUser) {
+      return res.status(400).json({ error: "Usuario duplicado" });
+    }
 
     const hash = await bcrypt.hash(password, 10);
 
@@ -66,40 +121,7 @@ export const register = async (req, res) => {
       email: user.email,
     });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ error: "correo y contraseña son requeridos" });
-    }
-
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ error: "usuario no encontrado" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(401).json({ error: "contraseña incorrecta" });
-    }
-
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" },
-    );
-
-    return res.status(200).json({ token });
-  } catch (error) {
+    // console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

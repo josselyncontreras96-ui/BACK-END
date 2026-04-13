@@ -13,12 +13,13 @@ import {
   
 } from "../controllers/products.controller.js";
 
+
 // /product/search?name=ap
 router.get("/search", searchProduct);
 
 router.get("/", getProducts);
-router.get("/:id", getProductById);
-router.post("/", createProduct);
+router.get("/:id", authMiddleware, getProductById);
+router.post("/", authMiddleware, createProduct);
 
 router.put("/:id", updateProduct);
 

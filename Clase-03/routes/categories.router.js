@@ -10,8 +10,11 @@ import {
   deleteCategory,
   getCategoryProducts,
 } from "../controllers/categories.controller.js";
+
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 router.get("/", getCategories);
-router.get("/:id", getCategoryById);
+router.get("/:id", authMiddleware, getCategoryById); // obliga a que el usuario este autenticado 
 router.post("/", createCategory);
 router.put("/:id", updateCategory);
 router.delete("/:id", deleteCategory);
