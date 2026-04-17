@@ -14,10 +14,12 @@ import {
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 router.get("/", getCategories);
-router.get("/:id", authMiddleware, getCategoryById); // obliga a que el usuario este autenticado 
+
+router.get("/:id/products", getCategoryProducts); // primero específica
+router.get("/:id", getCategoryById);              // después genérica
+
 router.post("/", createCategory);
 router.put("/:id", updateCategory);
 router.delete("/:id", deleteCategory);
-router.get("/:id/products", getCategoryProducts);
 
 export default router;

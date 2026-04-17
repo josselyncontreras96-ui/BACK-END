@@ -5,6 +5,7 @@ import express from "express";
 import "./db.js";
 
 import productsRouter from "./routes/products.router.js";
+import { authMiddleware } from "./middlewares/auth.middleware.js";
 import categoriesRouter from "./routes/categories.router.js";
 import authRouter from "./routes/auth.router.js";
 import pingRouter from "./routes/ping.router.js";
@@ -13,7 +14,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/products", authMiddleware, productsRouter);
+app.use("/products", productsRouter);
 app.use("/categories", categoriesRouter);
 app.use("/auth", authRouter);
 app.use(pingRouter);

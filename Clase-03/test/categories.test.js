@@ -66,14 +66,14 @@ describe("Categories endpoint", () => {
     // expect(res.body.name).to.equal("Categoría");
     // expect(res.body.description).to.equal("Categoría de test");
 
-    const category = await Category.findOne({ name: "Electronics" });
+  const category = await Category.findOne({ name: "Electronics" });
 
-    const response = await request(app).get(`/categories/${res.body._id}`);
+  const response = await request(app).get(`/categories/${category._id}`);
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.property("name");
-    expect(response.body.name).to.equal("Electronics");
-  });
+  expect(response.status).to.equal(200);
+  expect(response.body).to.have.property("name");
+  expect(response.body.name).to.equal("Electronics");
+});
   
 it("Categories Deberia devolver 422 si falta el nombre", async function () {
 

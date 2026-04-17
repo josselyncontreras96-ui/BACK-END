@@ -1,11 +1,12 @@
 import Category from "../models/Category.js";
+import Product from "../models/Product.js";
 
 export const getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
-    res.json(categories);
+    return res.status(200).json(categories);
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -13,19 +14,20 @@ export const getCategoryById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const category = await Category.findById(id).populate("type", "name");
+    const category = await Category.findById(id);
 
     if (!category) {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    return res.json(category);
+    return res.status(200).json(category.toObject());
+
   } catch (error) {
-    if (error.name == "CastError") {
-      return res.status(400).json({ error: "Invalid ID" });
+    if (error.name === "CastError") {
+      return res.status(404).json({ error: "Category not found" });
     }
 
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -87,7 +89,7 @@ export const deleteCategory = async (req, res) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    res.status(204).send();
+    return res.status(200).json({ message: "Category deleted" });
   } catch (error) {
     if (error.name == "CastError") {
       return res.status(400).json({ error: "Invalid ID" });

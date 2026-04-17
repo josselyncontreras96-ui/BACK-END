@@ -32,7 +32,7 @@ console.log(token);
 const decoded = jwt.verify(token, process.env.JWT_SECRET);
 console.log(decoded);
 
-req.user = decoded; // Agregar la información del usuario al objeto de solicitud para que esté disponible en los controladores
+req.user = decoded;           // Agregar la información del usuario al objeto de solicitud para que esté disponible en los controladores
    console.log("REQ.USER:", req.user);
 next();
    }
