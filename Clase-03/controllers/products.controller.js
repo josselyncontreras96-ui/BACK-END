@@ -155,9 +155,10 @@ export const deleteProduct = async (req, res) => {
 
 export const getProductsByCategory = async (req, res) => {
   try {
-    const products = await Product.find({ category: req.params.id }).populate(
-      "category",
-    );
+    const { categoryId } = req.params;
+
+    const products = await Product.find({ category: categoryId })
+      .populate("category");
 
     res.json(products);
   } catch (error) {
@@ -173,4 +174,20 @@ export const getProductsByOwner = async (req, res) => {
   const products = await Product.find({ owner: req.user.id });
 
   res.json(products);
+};
+
+export const searchProduct = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    const products = await Product.find({
+      name: { $regex: name || "", $options: "i" }
+    })
+      .populate("category", "name")
+      .populate("owner", "email");
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 };

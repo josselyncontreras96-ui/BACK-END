@@ -1,7 +1,4 @@
 import { Router } from "express";
-
-const router = Router();
-
 import {
   getProducts,
   getProductById,
@@ -9,25 +6,35 @@ import {
   updateProduct,
   deleteProduct,
   searchProduct,
-  getProductsByCategoryId
-  
+  getProductsByCategory
 } from "../controllers/products.controller.js";
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
-// /product/search?name=ap
+const router = Router();
+
+// /products/search?name=ap
 router.get("/search", searchProduct);
-router.post("/", authMiddleware, createProduct);
+
+// Obtener productos por categoría
+router.get("/category/:categoryId", getProductsByCategory);
+
+// Obtener todos
 router.get("/", getProducts);
-router.get("/category/:categoryId", getProductsByCategoryId)
+
+// Obtener uno por id
 router.get("/:id", getProductById);
-router.post("/", createProduct);
 
-router.put("/:id", updateProduct);
+// Crear (protegido)
+router.post("/", authMiddleware, createProduct);
 
-router.delete("/:id", deleteProduct);
+// Actualizar
+router.put("/:id", authMiddleware, updateProduct);
 
-
-
+// Eliminar
+router.delete("/:id", authMiddleware, deleteProduct);
 
 export default router;
+
+
+
