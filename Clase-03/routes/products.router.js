@@ -1,38 +1,30 @@
 import { Router } from "express";
+
+const router = Router();
+
 import {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
-  searchProduct,
-  getProductsByCategory
+  getProductsByCategory,
+  getProductsByOwner,
 } from "../controllers/products.controller.js";
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
-const router = Router();
+router.get("/my-products", authMiddleware, getProductsByOwner);
 
-// /products/search?name=ap
-router.get("/search", searchProduct);
-
-// Obtener productos por categoría
-router.get("/category/:categoryId", getProductsByCategory);
-
-// Obtener todos
-router.get("/", getProducts);
-
-// Obtener uno por id
-router.get("/:id", getProductById);
-
-// Crear (protegido)
+// CRUD: create, read, update, delete
 router.post("/", authMiddleware, createProduct);
-
-// Actualizar
+router.get("/", getProducts);
+router.get("/:id", getProductById);
 router.put("/:id", authMiddleware, updateProduct);
-
-// Eliminar
 router.delete("/:id", authMiddleware, deleteProduct);
+
+// Extra
+router.get("/category/:id", getProductsByCategory);
 
 export default router;
 

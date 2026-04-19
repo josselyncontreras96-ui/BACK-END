@@ -1,5 +1,6 @@
 import Product from "../models/Product.js";
 import Category from "../models/Category.js";
+import User from "../models/User.js";
 
 export const getProducts = async (req, res) => {
   try {
@@ -9,9 +10,9 @@ export const getProducts = async (req, res) => {
 
     res.json(products);
   } catch (error) {
-    // console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+  console.log("ERROR REAL:", error);
+  res.status(500).json({ error: error.message });
+}
 };
 
 export const getProductById = async (req, res) => {
